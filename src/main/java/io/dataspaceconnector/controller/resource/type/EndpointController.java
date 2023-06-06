@@ -164,9 +164,9 @@ public class EndpointController implements CRUDController<Endpoint, EndpointDesc
      */
     @Override
     public ResponseEntity<Void> delete(final UUID resourceId) {
-        if (service.get(resourceId) instanceof AppEndpoint) {
-            throw new MethodNotAllowed();
-        }
+        // if (service.get(resourceId) instanceof AppEndpoint) {
+        //     throw new MethodNotAllowed();
+        // }
         service.delete(resourceId);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }

@@ -17,6 +17,7 @@ package io.dataspaceconnector.service.resource.type;
 
 import io.dataspaceconnector.common.exception.ResourceNotFoundException;
 import io.dataspaceconnector.model.endpoint.AppEndpoint;
+import io.dataspaceconnector.model.endpoint.AppEndpointImpl;
 import io.dataspaceconnector.model.endpoint.AppEndpointDesc;
 import io.dataspaceconnector.model.endpoint.Endpoint;
 import io.dataspaceconnector.model.endpoint.EndpointDesc;
@@ -64,7 +65,7 @@ public class EndpointServiceProxy implements EntityService<Endpoint, EndpointDes
     @SuppressWarnings("unchecked")
     private <X extends Endpoint, Y extends EndpointDesc> EntityService<X, Y>
     getService(final Class<?> clazz) {
-        if (AppEndpointDesc.class.equals(clazz) || AppEndpoint.class.equals(clazz)) {
+        if (AppEndpointDesc.class.equals(clazz) || AppEndpoint.class.equals(clazz) || AppEndpointImpl.class.equals(clazz)) {
             return (EntityService<X, Y>) app;
         }
 
