@@ -49,58 +49,62 @@ public final class IdsAppEndpointBuilder
         super(selfLinkHelper);
     }
 
-//    @Override
-//    protected de.fraunhofer.iais.eis.AppEndpointImpl createInternal(
-//            final Endpoint endpoint, final int currentDepth, final int maxDepth)
-//            throws ConstraintViolationException {
-//
-//        final var documentation = endpoint.getDocs();
-//        var location = endpoint.getLocation();
-//        final var info = new TypedLiteral(endpoint.getInfo(), "EN");
-//
-//        URI accessUrl;
-//        try {
-//            accessUrl = URI.create(location);
-//        } catch (IllegalArgumentException exception) {
-//            accessUrl = URI.create("https://default-url");
-//        }
-//
-//
-//
-//            final var protocol = ((AppEndpoint) endpoint).getProtocol();
-//            final var type = ((AppEndpoint) endpoint).getEndpointType();
-//            final var port = ((AppEndpoint) endpoint).getEndpointPort();
-//            final var information = endpoint.getInfo();
-//            final var path = ((AppEndpoint) endpoint).getPath();
-//            final var mediaType =
-//                    new IANAMediaTypeBuilder()._filenameExtension_(((AppEndpoint) endpoint).getMediaType());
-//            final var appEndpoint = (AppEndpoint) endpoint;
-//
-//        final var idsEndpoint = new AppEndpointBuilder(getAbsoluteSelfLink(endpoint))
-//                    ._path_(location)
-//                    ._accessURL_(accessUrl)
-//                    ._endpointDocumentation_(Util.asList(documentation))
-//                    ._endpointInformation_(Util.asList(info))
-//                    ._appEndpointType_(AppEndpointType.valueOf(appEndpoint.getEndpointType()))
-//                    ._appEndpointPort_(BigInteger.valueOf(appEndpoint.getEndpointPort()))
-//                    ._appEndpointProtocol_(appEndpoint.getProtocol())
-//                    ._appEndpointMediaType_(new IANAMediaTypeBuilder()
-//                            ._filenameExtension_(appEndpoint.getMediaType())
-//                            .build())
-//                    ._language_(ToIdsObjectMapper.getLanguage(appEndpoint.getLanguage()))
-//                    .build();
-//
-//
-//        return idsEndpoint;
-//    }
+    // @Override
+    // protected de.fraunhofer.iais.eis.AppEndpointImpl createInternal(
+    // final Endpoint endpoint, final int currentDepth, final int maxDepth)
+    // throws ConstraintViolationException {
+    //
+    // final var documentation = endpoint.getDocs();
+    // var location = endpoint.getLocation();
+    // final var info = new TypedLiteral(endpoint.getInfo(), "EN");
+    //
+    // URI accessUrl;
+    // try {
+    // accessUrl = URI.create(location);
+    // } catch (IllegalArgumentException exception) {
+    // accessUrl = URI.create("https://default-url");
+    // }
+    //
+    //
+    //
+    // final var protocol = ((AppEndpoint) endpoint).getProtocol();
+    // final var type = ((AppEndpoint) endpoint).getEndpointType();
+    // final var port = ((AppEndpoint) endpoint).getEndpointPort();
+    // final var information = endpoint.getInfo();
+    // final var path = ((AppEndpoint) endpoint).getPath();
+    // final var mediaType =
+    // new IANAMediaTypeBuilder()._filenameExtension_(((AppEndpoint)
+    // endpoint).getMediaType());
+    // final var appEndpoint = (AppEndpoint) endpoint;
+    //
+    // final var idsEndpoint = new AppEndpointBuilder(getAbsoluteSelfLink(endpoint))
+    // ._path_(location)
+    // ._accessURL_(accessUrl)
+    // ._endpointDocumentation_(Util.asList(documentation))
+    // ._endpointInformation_(Util.asList(info))
+    // ._appEndpointType_(AppEndpointType.valueOf(appEndpoint.getEndpointType()))
+    // ._appEndpointPort_(BigInteger.valueOf(appEndpoint.getEndpointPort()))
+    // ._appEndpointProtocol_(appEndpoint.getProtocol())
+    // ._appEndpointMediaType_(new IANAMediaTypeBuilder()
+    // ._filenameExtension_(appEndpoint.getMediaType())
+    // .build())
+    // ._language_(ToIdsObjectMapper.getLanguage(appEndpoint.getLanguage()))
+    // .build();
+    //
+    //
+    // return idsEndpoint;
+    // }
 
-//    @Override
-//    protected de.fraunhofer.iais.eis.AppEndpointImpl createInternal(AppEndpointImpl entity, int currentDepth, int maxDepth) throws ConstraintViolationException {
-//        return null;
-//    }
+    // @Override
+    // protected de.fraunhofer.iais.eis.AppEndpointImpl
+    // createInternal(AppEndpointImpl entity, int currentDepth, int maxDepth) throws
+    // ConstraintViolationException {
+    // return null;
+    // }
 
     @Override
-    protected de.fraunhofer.iais.eis.AppEndpointImpl createInternal(AppEndpointImpl endpoint, int currentDepth, int maxDepth) throws ConstraintViolationException {
+    protected de.fraunhofer.iais.eis.AppEndpointImpl createInternal(AppEndpointImpl endpoint, int currentDepth,
+            int maxDepth) throws ConstraintViolationException {
         final var documentation = endpoint.getDocs();
         var location = endpoint.getLocation();
         final var info = new TypedLiteral(endpoint.getInfo(), "EN");
@@ -112,31 +116,47 @@ public final class IdsAppEndpointBuilder
             accessUrl = URI.create("https://default-url");
         }
 
+        // final var protocol = ((AppEndpoint) endpoint).getProtocol();
+        // final var type = ((AppEndpoint) endpoint).getEndpointType();
+        // final var port = ((AppEndpoint) endpoint).getEndpointPort();
+        // final var information = endpoint.getInfo();
+        // final var path = ((AppEndpoint) endpoint).getPath();
+        // final var mediaType =
+        // new IANAMediaTypeBuilder()._filenameExtension_(((AppEndpoint)
+        // endpoint).getMediaType());
+        final var appEndpoint = (AppEndpoint) endpoint;
 
-
-//            final var protocol = ((AppEndpoint) endpoint).getProtocol();
-//            final var type = ((AppEndpoint) endpoint).getEndpointType();
-//            final var port = ((AppEndpoint) endpoint).getEndpointPort();
-//            final var information = endpoint.getInfo();
-//            final var path = ((AppEndpoint) endpoint).getPath();
-//            final var mediaType =
-//                    new IANAMediaTypeBuilder()._filenameExtension_(((AppEndpoint) endpoint).getMediaType());
-            final var appEndpoint = (AppEndpoint) endpoint;
+        String endpointTypeStr = endpoint.getEndpointType();
+        AppEndpointType type = AppEndpointType.INPUT_ENDPOINT;
+        if(endpointTypeStr != null) {
+            if(endpointTypeStr.endsWith("CONFIG_ENDPOINT")) {
+                type = AppEndpointType.CONFIG_ENDPOINT;
+            }else if(endpointTypeStr.endsWith("OUTPUT_ENDPOINT")) {
+                type = AppEndpointType.OUTPUT_ENDPOINT;
+            }else if(endpointTypeStr.endsWith("PROCESS_ENDPOINT")) {
+                type = AppEndpointType.PROCESS_ENDPOINT;
+            }else if(endpointTypeStr.endsWith("SELF_DESCRIPTION_ENDPOINT")) {
+                type = AppEndpointType.SELF_DESCRIPTION_ENDPOINT;
+            }else if(endpointTypeStr.endsWith("STATUS_ENDPOINT")) {
+                type = AppEndpointType.STATUS_ENDPOINT;
+            }else if(endpointTypeStr.endsWith("USAGE_POLICY_ENDPOINT")) {
+                type = AppEndpointType.USAGE_POLICY_ENDPOINT;
+            }
+        }
 
         final var idsEndpoint = new AppEndpointBuilder(getAbsoluteSelfLink(endpoint))
-                    ._path_(location)
-                    ._accessURL_(accessUrl)
-                    ._endpointDocumentation_(Util.asList(documentation))
-                    ._endpointInformation_(Util.asList(info))
-                    ._appEndpointType_(AppEndpointType.INPUT_ENDPOINT)
-                    ._appEndpointPort_(BigInteger.valueOf(appEndpoint.getEndpointPort()))
-                    ._appEndpointProtocol_(appEndpoint.getProtocol())
-                    ._appEndpointMediaType_(new IANAMediaTypeBuilder()
-                            ._filenameExtension_(appEndpoint.getMediaType())
-                            .build())
-                    ._language_(ToIdsObjectMapper.getLanguage(appEndpoint.getLanguage()))
-                    .build();
-
+                ._path_(location)
+                ._accessURL_(accessUrl)
+                ._endpointDocumentation_(Util.asList(documentation))
+                ._endpointInformation_(Util.asList(info))
+                ._appEndpointType_(type)
+                ._appEndpointPort_(BigInteger.valueOf(appEndpoint.getEndpointPort()))
+                ._appEndpointProtocol_(appEndpoint.getProtocol())
+                ._appEndpointMediaType_(new IANAMediaTypeBuilder()
+                        ._filenameExtension_(appEndpoint.getMediaType())
+                        .build())
+                ._language_(ToIdsObjectMapper.getLanguage(appEndpoint.getLanguage()))
+                .build();
 
         return (de.fraunhofer.iais.eis.AppEndpointImpl) idsEndpoint;
     }

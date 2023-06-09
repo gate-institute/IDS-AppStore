@@ -15,6 +15,21 @@
  */
 package io.dataspaceconnector.controller.resource.type;
 
+import java.util.UUID;
+
+import javax.validation.Valid;
+
+import org.springframework.data.web.PagedResourcesAssembler;
+import org.springframework.hateoas.PagedModel;
+import org.springframework.hateoas.RepresentationModel;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
+
 import io.dataspaceconnector.common.util.Utils;
 import io.dataspaceconnector.config.BasePath;
 import io.dataspaceconnector.controller.resource.base.CRUDController;
@@ -26,7 +41,6 @@ import io.dataspaceconnector.controller.resource.view.endpoint.EndpointViewProxy
 import io.dataspaceconnector.controller.util.ResponseCode;
 import io.dataspaceconnector.controller.util.ResponseDescription;
 import io.dataspaceconnector.model.endpoint.AppEndpoint;
-import io.dataspaceconnector.model.endpoint.AppEndpointDesc;
 import io.dataspaceconnector.model.endpoint.Endpoint;
 import io.dataspaceconnector.model.endpoint.EndpointDesc;
 import io.dataspaceconnector.service.resource.type.EndpointServiceProxy;
@@ -39,27 +53,13 @@ import lombok.Getter;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import lombok.Setter;
-import org.springframework.data.web.PagedResourcesAssembler;
-import org.springframework.hateoas.PagedModel;
-import org.springframework.hateoas.RepresentationModel;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
-
-import javax.validation.Valid;
-import java.util.UUID;
 
 /**
  * Offers the endpoints for managing different endpoints.
  */
 @RestController
 @RequiredArgsConstructor
-@ApiResponse(responseCode = ResponseCode.UNAUTHORIZED,
-        description = ResponseDescription.UNAUTHORIZED)
+@ApiResponse(responseCode = ResponseCode.UNAUTHORIZED, description = ResponseDescription.UNAUTHORIZED)
 @RequestMapping(BasePath.ENDPOINTS)
 @Tag(name = ResourceName.ENDPOINTS, description = ResourceDescription.ENDPOINTS)
 @Getter(AccessLevel.PROTECTED)
@@ -105,13 +105,6 @@ public class EndpointController implements CRUDController<Endpoint, EndpointDesc
      */
     @Override
     public ResponseEntity<Object> create(final EndpointDesc desc) {
-        if (isAppEndpoint(desc)) {
-//            throw new MethodNotAllowed();
-            final var resource = service.create(desc);
-
-            return respondCreated(service.create(desc));
-
-        }
         return respondCreated(service.create(desc));
     }
 
@@ -146,9 +139,6 @@ public class EndpointController implements CRUDController<Endpoint, EndpointDesc
      */
     @Override
     public ResponseEntity<Object> update(final UUID resourceId, final EndpointDesc desc) {
-//        if (isAppEndpoint(desc)) {
-//            throw new MethodNotAllowed();
-//        }
         final var resource = service.update(resourceId, desc);
 
         if (resource.getId().equals(resourceId)) {
@@ -164,9 +154,6 @@ public class EndpointController implements CRUDController<Endpoint, EndpointDesc
      */
     @Override
     public ResponseEntity<Void> delete(final UUID resourceId) {
-        if (service.get(resourceId) instanceof AppEndpoint) {
-            throw new MethodNotAllowed();
-        }
         service.delete(resourceId);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
@@ -180,16 +167,11 @@ public class EndpointController implements CRUDController<Endpoint, EndpointDesc
      */
     @PutMapping("{id}/datasource/{dataSourceId}")
     @Operation(summary = "Creates start endpoint for a route.")
-    @ApiResponse(responseCode = ResponseCode.NO_CONTENT,
-            description = ResponseDescription.NO_CONTENT)
+    @ApiResponse(responseCode = ResponseCode.NO_CONTENT, description = ResponseDescription.NO_CONTENT)
     public final ResponseEntity<Void> linkDataSource(
             @Valid @PathVariable(name = "id") final UUID genericEndpointId,
             @Valid @PathVariable(name = "dataSourceId") final UUID dataSourceId) {
         genericEndpointService.setGenericEndpointDataSource(genericEndpointId, dataSourceId);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
-    }
-
-    private boolean isAppEndpoint(final EndpointDesc desc) {
-        return desc instanceof AppEndpointDesc;
     }
 }
